@@ -49,8 +49,28 @@ return [
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'laravel'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', ''),
+            'username' => (function() {
+                $value = env('DB_USERNAME', 'root');
+                $key = env('DB_VAULT_KEY');
+                if ($key && str_starts_with($value, 'ENC:')) {
+                    $key = base64_decode($key);
+                    $data = base64_decode(substr($value, 4));
+                    list($encrypted_data, $iv) = explode('::', $data, 2);
+                    return openssl_decrypt($encrypted_data, 'AES-256-CBC', $key, 0, $iv);
+                }
+                return $value;
+            })(),
+            'password' => (function() {
+                $value = env('DB_PASSWORD', '');
+                $key = env('DB_VAULT_KEY');
+                if ($key && str_starts_with($value, 'ENC:')) {
+                    $key = base64_decode($key);
+                    $data = base64_decode(substr($value, 4));
+                    list($encrypted_data, $iv) = explode('::', $data, 2);
+                    return openssl_decrypt($encrypted_data, 'AES-256-CBC', $key, 0, $iv);
+                }
+                return $value;
+            })(),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => env('DB_CHARSET', 'utf8mb4'),
             'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
