@@ -141,8 +141,9 @@
     <script src="{{ asset('assets/pages/jquery.datatables.init.js') }}"></script>
 
     <!-- App js -->
-    <script src="{{ asset('assets/js/jquery.core.js') }}"></script>
-    <script src="{{ asset('assets/js/jquery.app.js') }}"></script>
+    <!-- App js -->
+    <script src="{{ asset('assets/js/jquery.core.js') }}?v={{ time() }}"></script>
+    <script src="{{ asset('assets/js/jquery.app.js') }}?v={{ time() }}"></script>
     @yield ('script')
     <script>
         var resizefunc = [];
