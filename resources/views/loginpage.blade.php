@@ -99,7 +99,7 @@
 
                                 @if($strikes >= 5)
                                     <div class="mb-3 d-flex justify-content-center">
-                                        <div class="cf-turnstile" data-sitekey="{{ env('TURNSTILE_SITE_KEY') }}"></div>
+                                        <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}"></div>
                                     </div>
                                 @endif
 
