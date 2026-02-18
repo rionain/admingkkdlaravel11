@@ -4,7 +4,7 @@
 
         <!--- Sidemenu -->
         <div id="sidebar-menu">
-            <div class="user-details dropdown">
+            <div class="user-details">
                 <div class="overlay"></div>
                 <div class="text-center">
                     <img src="{{ Auth::check() && Auth::user()->profile_pic ? S3Helper::get(Auth::user()->profile_pic) : asset('assets/images/users/avatar-1.jpg') }}"
@@ -12,23 +12,11 @@
                 </div>
                 <div class="user-info">
                     <div>
-                        <a href="#" class="dropdown-toggle text-center" data-toggle="dropdown"
-                            aria-expanded="false">
-                            {{ Auth::check() ? Auth::user()->nama : 'Belum login' }}
-                            <span class="mdi mdi-menu-down"></span> <br>
+                        <a href="{{ url('profile') }}" class="text-center">
+                            {{ Auth::check() ? Auth::user()->nama : 'Belum login' }} <br>
                             <span class="badge badge-secondary">{{ Auth::user()->nama_role }}</span>
                         </a>
                     </div>
-                </div>
-
-                <div class="dropdown-menu">
-                    <ul class="list-unstyled">
-                        <li>
-                            <a href="{{ url('profile') }}"><i class="mdi mdi-face-profile m-r-5"></i>
-                                Profile</a>
-                        </li>
-                        <li><a href="{{ url('logout') }}"><i class="mdi mdi-logout m-r-5"></i> Logout</a></li>
-                    </ul>
                 </div>
             </div>
 
@@ -366,6 +354,14 @@
                         </ul>
                     </li>
                 @endrole
+
+                <li class="has_sub">
+                    <a href="{{ url('logout') }}" class="waves-effect"><i class="mdi mdi-logout"></i>
+                        <span>
+                            Logout
+                        </span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->
