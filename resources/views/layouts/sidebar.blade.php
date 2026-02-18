@@ -24,7 +24,7 @@
                 <li class="menu-title">Navigation</li>
 
                 @role('Superadmin')
-                    <li class="has_sub">
+                    <li>
                         <a href="{{ url('superadmin/dashboard') }}"
                             class="waves-effect {{ request()->segment(2) == 'administrasi' ? 'active subdrop' : '' }}"><i
                                 class="mdi mdi-view-dashboard"></i>
@@ -144,14 +144,14 @@
                         </ul>
                     </li>
 
-                    <li class="has_sub">
+                    <li>
                         <a href="{{ url('superadmin/admin') }}" class="waves-effect"><i class="fa fa-user"></i>
                             <span>
                                 Admin
                             </span>
                         </a>
                     </li>
-                    <li class="has_sub">
+                    <li>
                         <a href="{{ url('superadmin/approval-surat') }}" class="waves-effect"><i class="fa fa-user"></i>
                             <span>
                                 Approval
@@ -245,7 +245,7 @@
 
                 @endrole
                 @role('Admin Cabang')
-                    <li class="has_sub">
+                    <li>
                         <a href="{{ url('admin-cabang/dashboard') }}" class="waves-effect"><i
                                 class="mdi mdi-view-dashboard"></i>
                             <span>
@@ -278,7 +278,7 @@
                         </ul>
                     </li>
 
-                    <li class="has_sub">
+                    <li>
                         <a href="{{ url('admin-cabang/ibadah') }}" class="waves-effect"><i class="fa fa-star"></i>
                             <span>
                                 List Ibadah
@@ -324,7 +324,7 @@
                 @endrole
 
                 @role('Approval')
-                    <li class="has_sub">
+                    <li>
                         <a href="{{ url('approval/dashboard') }}" class="waves-effect"><i
                                 class="mdi mdi-view-dashboard"></i>
                             <span>
@@ -355,7 +355,7 @@
                     </li>
                 @endrole
 
-                <li class="has_sub">
+                <li>
                     <a href="{{ url('logout') }}" id="btn-logout" class="waves-effect"><i class="mdi mdi-logout"></i>
                         <span>
                             Logout
