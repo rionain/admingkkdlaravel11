@@ -98,7 +98,8 @@
                                                             {{ old('gender') == 'l' ? 'selected' : '' }}>
                                                             Laki - laki
                                                         </option>
-                                                        <option value="p" {{ old('gender') == 'l' ? 'checked' : '' }}>
+                                                        <option value="p"
+                                                            {{ old('gender') == 'p' ? 'selected' : '' }}>
                                                             Perempuan
                                                         </option>
                                                     </select>

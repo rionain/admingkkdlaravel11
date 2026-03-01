@@ -61,6 +61,19 @@ class CommandController extends Controller
             return redirect()->back()->with('gagal', 'Gagal composer install ' . $env->getExitCodeText())->withInput();
         }
 
+        // ------------------------------------------------------------------------
+        // php artisan migrate --force
+        // ------------------------------------------------------------------------
+        $migrate = new Process(["php", "artisan", "migrate", "--force"]);
+
+        $migrate->setWorkingDirectory(base_path());
+
+        $migrate->run();
+
+        if (!$migrate->isSuccessful()) {
+            return redirect()->back()->with('gagal', 'Gagal run migrate ' . $migrate->getExitCodeText())->withInput();
+        }
+
         return redirect()->back()->with('berhasil', 'Berhasil update aplikasi')->withInput();
     }
 
@@ -128,6 +141,20 @@ class CommandController extends Controller
 
         if (!$env->isSuccessful()) {
             return response()->json(['status' => false, 'message' => 'Gagal composer install'], 400);
+        }
+
+
+        // ------------------------------------------------------------------------
+        // php artisan migrate --force
+        // ------------------------------------------------------------------------
+        $migrate = new Process(["php", "artisan", "migrate", "--force"]);
+
+        $migrate->setWorkingDirectory(base_path());
+
+        $migrate->run();
+
+        if (!$migrate->isSuccessful()) {
+            return response()->json(['status' => false, 'message' => 'Gagal run migrate'], 400);
         }
 
         return response()->json(['status' => true, 'message' => 'Berhasil update aplikasi'], 200);
