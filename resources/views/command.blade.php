@@ -25,7 +25,7 @@
                                 <div class="col-md-6">
                                     <h4 class="text-center">PWA</h4>
                                     <div class="list-group">
-                                        <a href="{{ url('superadmin/setting/command/pwa/deploy') }}"
+                                        <a href="{{ url('superadmin/pengaturan/command/pwa/deploy') }}"
                                             class="list-group-item active">
                                             <h4 class="list-group-item-heading">Update repo</h4>
                                             <p class="list-group-item-text">klik untuk mengupdate repo</p>
@@ -36,7 +36,7 @@
                                 <div class="col-md-6">
                                     <h4 class="text-center">Superadmin</h4>
                                     <div class="list-group">
-                                        <a href="{{ url('superadmin/setting/command/superadmin/deploy') }}"
+                                        <a href="{{ url('superadmin/pengaturan/command/superadmin/deploy') }}"
                                             class="list-group-item active">
                                             <h4 class="list-group-item-heading">Update repo</h4>
                                             <p class="list-group-item-text">klik untuk mengupdate repo</p>
