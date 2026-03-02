@@ -37,7 +37,19 @@ class SertifikatPernikahanController extends Controller
 
     public function tambah(Request $request)
     {
-        validator($request->all())->validate([
+        // Debugging: Log the request data and file sizes
+        $fileFields = ['foto', 'tanda_tangan_pengantin_pria', 'tanda_tangan_pengantin_wanita', 'tanda_tangan_pendeta', 'tanda_tangan_saksi1', 'tanda_tangan_saksi2'];
+        \Log::info('SertifikatPernikahan@tambah request data:', $request->except($fileFields));
+        foreach ($fileFields as $field) {
+            if ($request->hasFile($field)) {
+                $file = $request->file($field);
+                \Log::info("File $field: size=" . $file->getSize() . " error=" . $file->getError() . " isValid=" . ($file->isValid() ? 'yes' : 'no'));
+            } else {
+                \Log::info("File $field missing or invalid");
+            }
+        }
+
+        $request->validate([
             'tanggal_pernikahan'                    => 'required|date',
             'tempat_pernikahan'                     => 'required',
             'nama_pasangan_pria'                    => 'required',
@@ -50,16 +62,23 @@ class SertifikatPernikahanController extends Controller
             'tanggal_lahir_pasangan_wanita'         => 'required|date',
             'tanggal_lahir_baru_pasangan_wanita'    => 'required|date',
             'tanggal_baptis_pasangan_wanita'        => 'required|date',
-            'pelayan_pengantin'                     => 'required',
             'nama_pendeta'                          => 'required',
             'nama_saksi1'                           => 'required',
             'nama_saksi2'                           => 'required',
             'lfk_status_sertifikat_id'              => 'required',
-            'alasan_demote'                         => '',
+            'alasan_demote'                         => 'nullable',
             'lfk_cabang_id'                         => 'required',
             'no_sertifikat'                         => 'required',
             'jenis_sertifikat_pernikahan'           => 'required',
+            'foto'                                  => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'tanda_tangan_pengantin_pria'           => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'tanda_tangan_pengantin_wanita'         => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'tanda_tangan_pendeta'                  => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'tanda_tangan_saksi1'                   => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'tanda_tangan_saksi2'                   => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
         ]);
+
+
 
         $sertifikat = new SertifikatPernikahan;
         $sertifikat->tanggal_pernikahan                     = $request->tanggal_pernikahan;
@@ -170,7 +189,19 @@ class SertifikatPernikahanController extends Controller
 
     public function edit(Request $request, $sertifikat_pernikahan_id)
     {
-        validator($request->all())->validate([
+        // Debugging: Log the request data and file sizes
+        $fileFields = ['foto', 'tanda_tangan_pengantin_pria', 'tanda_tangan_pengantin_wanita', 'tanda_tangan_pendeta', 'tanda_tangan_saksi1', 'tanda_tangan_saksi2'];
+        \Log::info('SertifikatPernikahan@edit request data:', $request->except($fileFields));
+        foreach ($fileFields as $field) {
+            if ($request->hasFile($field)) {
+                $file = $request->file($field);
+                \Log::info("File $field: size=" . $file->getSize() . " error=" . $file->getError() . " isValid=" . ($file->isValid() ? 'yes' : 'no'));
+            } else {
+                \Log::info("File $field missing or invalid");
+            }
+        }
+
+        $request->validate([
             'tanggal_pernikahan'                    => 'required|date',
             'tempat_pernikahan'                     => 'required',
             'nama_pasangan_pria'                    => 'required',
@@ -185,11 +216,18 @@ class SertifikatPernikahanController extends Controller
             'tanggal_baptis_pasangan_wanita'        => 'required|date',
             'nama_pendeta'                          => 'required',
             'lfk_status_sertifikat_id'              => 'required',
-            'alasan_demote'                         => '',
+            'alasan_demote'                         => 'nullable',
             'lfk_cabang_id'                         => 'required',
             'no_sertifikat'                         => 'required',
             'jenis_sertifikat_pernikahan'           => 'required',
+            'foto'                                  => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'tanda_tangan_pengantin_pria'           => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'tanda_tangan_pengantin_wanita'         => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'tanda_tangan_pendeta'                  => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'tanda_tangan_saksi1'                   => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'tanda_tangan_saksi2'                   => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
         ]);
+
         $sertifikat = SertifikatPernikahan::find($sertifikat_pernikahan_id);
         if (!$sertifikat) {
             return redirect()->back()->with('gagal', 'Data tidak ditemukan');
