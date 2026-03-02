@@ -25,12 +25,22 @@ class PengaturanKopSuratController extends Controller
 
     public function tambah_kop()
     {
+        // Debugging: Log the request data and file sizes
+        \Log::info('PengaturanKopSurat@tambah_kop request data:', request()->except(['fileKop']));
+        if (request()->hasFile('fileKop')) {
+            $file = request()->file('fileKop');
+            \Log::info("File fileKop: size=" . $file->getSize() . " error=" . $file->getError() . " isValid=" . ($file->isValid() ? 'yes' : 'no'));
+        } else {
+            \Log::info("File fileKop missing or invalid");
+        }
+
         $value = (object) request()->validate([
             'nama_kop_surat'            => 'required',
             'fieldTitleHeader'          => 'required',
             'fieldHeaderDescription'    => 'required',
-            'fileKop'                   => 'required|file|mimes:jpg,jpeg,png',
+            'fileKop'                   => 'required|image|mimes:jpg,jpeg,png|max:5120',
         ]);
+
         $kop = Kop::where('nama_kop_surat', $value->nama_kop_surat)->where(['deleted' => '0'])->orderBy('created_date', 'DESC')->first();
         if ($kop) {
             return redirect()->back()->withInput()->with('gagal', 'Nama kop surat sudah ada');
@@ -81,11 +91,21 @@ class PengaturanKopSuratController extends Controller
     }
     public function edit_kop($kop_id)
     {
+        // Debugging: Log the request data and file sizes
+        \Log::info('PengaturanKopSurat@edit_kop request data:', request()->except(['fileKop']));
+        if (request()->hasFile('fileKop')) {
+            $file = request()->file('fileKop');
+            \Log::info("File fileKop: size=" . $file->getSize() . " error=" . $file->getError() . " isValid=" . ($file->isValid() ? 'yes' : 'no'));
+        } else {
+            \Log::info("File fileKop missing or invalid");
+        }
+
         $value = (object) request()->validate([
             'fieldTitleHeader'          => 'required',
             'fieldHeaderDescription'    => 'required',
-            // 'fileKop'                   => request('fileKop') ? 'required|file|mimes:jpg,jpeg,png' : '',
+            'fileKop'                   => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
         ]);
+
 
 
         $kop = Kop::where('kop_id', $kop_id)->where(['deleted' => '0'])->orderBy('created_date', 'DESC')->first();

@@ -89,7 +89,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [AuthController::class, 'login']);
 // login
 Route::prefix('login')->group(function () {
-    Route::get('/', [AuthController::class, 'login']);
+    Route::get('/', [AuthController::class, 'login'])->name('login');
     Route::post('/', [AuthController::class, 'login_action']);
 });
 
@@ -474,6 +474,14 @@ Route::middleware(['auth'])->group(function () {
                         Route::get('/{pengaturan_surat_tugas_id}/lihat', [PengaturanSuratTugasController::class, 'lihat']);
                         Route::get('/{pengaturan_surat_tugas_id}/hapus', [PengaturanSuratTugasController::class, 'hapus']);
                     });
+                });
+
+                Route::prefix('/audit-trail')->group(function () {
+                    Route::get('/', [\App\Http\Controllers\Pengaturan\LogController::class, 'audit_trail']);
+                });
+                Route::prefix('/system-errors')->group(function () {
+                    Route::get('/', [\App\Http\Controllers\Pengaturan\LogController::class, 'system_errors']);
+                    Route::get('/{id}', [\App\Http\Controllers\Pengaturan\LogController::class, 'system_error_detail']);
                 });
 
                 Route::prefix('/maintenance')->group(function () {

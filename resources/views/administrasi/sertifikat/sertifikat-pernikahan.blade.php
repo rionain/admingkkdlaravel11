@@ -362,11 +362,11 @@
                             </div>
 
                             <div class="m-b-30">
-                                {{-- <button id="addSertifikat" type="button"
+                                <button id="addSertifikat" type="button"
                                     class="btn btn-success waves-effect waves-light" data-toggle="modal"
                                     data-target="#modalSertifikat">
                                     Add <em class="mdi mdi-plus-circle-outline"></em>
-                                </button> --}}
+                                </button>
                             </div>
                             <div style="overflow: auto">
                                 <table class="table table-striped add-edit-table table-bordered"

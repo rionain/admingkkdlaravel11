@@ -241,6 +241,12 @@
                                 </ul>
                             </li>
                             <li>
+                                <a href="{{ url('superadmin/pengaturan/audit-trail') }}" class="waves-effect">Audit Trail</a>
+                            </li>
+                            <li>
+                                <a href="{{ url('superadmin/pengaturan/system-errors') }}" class="waves-effect">System Errors</a>
+                            </li>
+                            <li>
                                 <a href="{{ url('superadmin/pengaturan/maintenance') }}" class="waves-effect">Maintenance</a>
                             </li>
                         </ul>

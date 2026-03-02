@@ -29,5 +29,21 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->reportable(function (Throwable $e) {
+            try {
+                \App\Models\SystemError::create([
+                    'user_id'     => \Illuminate\Support\Facades\Auth::id(),
+                    'message'     => $e->getMessage(),
+                    'file'        => $e->getFile(),
+                    'line'        => $e->getLine(),
+                    'stack_trace' => $e->getTraceAsString(),
+                    'url'         => request()->fullUrl(),
+                    'method'      => request()->method(),
+                    'ip_address'  => request()->ip(),
+                    'user_agent'  => request()->userAgent(),
+                ]);
+            } catch (\Exception $ex) {
+                // Fail silently to avoid infinite loops if DB is down
+            }
+        });
     })->create();

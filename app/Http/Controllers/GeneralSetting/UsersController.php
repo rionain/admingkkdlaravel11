@@ -46,6 +46,15 @@ class UsersController extends Controller
 
     public function tambah_user()
     {
+        // Debugging: Log the request data and file sizes
+        \Log::info('UsersController@tambah_user request data:', request()->except(['foto', 'password', 'password_confirmation']));
+        if (request()->hasFile('foto')) {
+            $file = request()->file('foto');
+            \Log::info("File foto: size=" . $file->getSize() . " error=" . $file->getError() . " isValid=" . ($file->isValid() ? 'yes' : 'no'));
+        } else {
+            \Log::info("File foto missing or invalid");
+        }
+
         $value = (object) request()->validate([
             'nama'      => 'required',
             'email'     => 'required|email',
@@ -53,10 +62,11 @@ class UsersController extends Controller
             'lfk_cabang_id'    => request('role_user') != 1 ? 'required' : '',
             'phone'     => 'required|max:100',
             'alamat'    => 'required',
-            'foto'      => request('foto') ? 'required|file|mimes:jpg,jpeg,png' : '',
+            'foto'      => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
             'role_user' => 'required',
             'password'  => 'required|confirmed',
         ]);
+
 
         $user = User::where('email', $value->email)->first();
         if (!$user) {
@@ -102,6 +112,15 @@ class UsersController extends Controller
 
     public function edit_user($user_id)
     {
+        // Debugging: Log the request data and file sizes
+        \Log::info('UsersController@edit_user request data:', request()->except(['foto']));
+        if (request()->hasFile('foto')) {
+            $file = request()->file('foto');
+            \Log::info("File foto: size=" . $file->getSize() . " error=" . $file->getError() . " isValid=" . ($file->isValid() ? 'yes' : 'no'));
+        } else {
+            \Log::info("File foto missing or invalid");
+        }
+
         $value = (object) request()->validate([
             'nama'      => 'required',
             'email'     => 'required|email',
@@ -109,9 +128,10 @@ class UsersController extends Controller
             'lfk_cabang_id'    => request('role_user') != 1 ? 'required' : '',
             'phone'     => 'required|max:100',
             'alamat'    => 'required',
-            'foto'      => request('foto') ? 'required|file|mimes:jpg,jpeg,png' : '',
+            'foto'      => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
             'role_user' => 'required',
         ]);
+
 
         $user = User::where(['user_id' => $user_id, 'deleted' => '0'])->first();
         if (!$user) {

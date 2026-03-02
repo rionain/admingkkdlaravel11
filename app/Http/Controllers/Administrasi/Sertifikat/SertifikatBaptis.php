@@ -37,7 +37,18 @@ class SertifikatBaptis extends Controller
 
     public function tambah(Request $request)
     {
-        validator($request->all())->validate([
+        // Debugging: Log the request data and file sizes
+        \Log::info('SertifikatBaptis@tambah request data:', $request->except(['foto_jemaat', 'foto_tanda_tangan', 'ttdsaksi1', 'ttdsaksi2']));
+        foreach (['foto_jemaat', 'foto_tanda_tangan', 'ttdsaksi1', 'ttdsaksi2'] as $field) {
+            if ($request->hasFile($field)) {
+                $file = $request->file($field);
+                \Log::info("File $field: size=" . $file->getSize() . " error=" . $file->getError() . " isValid=" . ($file->isValid() ? 'yes' : 'no'));
+            } else {
+                \Log::info("File $field missing");
+            }
+        }
+
+        $request->validate([
             'nama_jemaat'               => 'required',
             'tanggal_baptis'            => 'required|date',
             'tempat_baptis'             => 'required',
@@ -49,12 +60,16 @@ class SertifikatBaptis extends Controller
             'nama_pembaptis'            => 'required',
             'saksi1'                    => 'required',
             'saksi2'                    => 'required',
-            'foto'                      => 'required|image|mimes:jpeg,png,jpg',
+            'foto_jemaat'               => 'required|image|mimes:jpeg,png,jpg|max:5120',
+            'foto_tanda_tangan'         => 'required|image|mimes:jpeg,png,jpg|max:5120',
+            'ttdsaksi1'                 => 'required|image|mimes:jpeg,png,jpg|max:5120',
+            'ttdsaksi2'                 => 'required|image|mimes:jpeg,png,jpg|max:5120',
             'lfk_status_sertifikat_id'  => 'required',
-            'alasan_demote'             => '',
+            'alasan_demote'             => 'nullable',
             'lfk_cabang_id'             => 'required',
             'no_sertifikat'             => 'nullable',
         ]);
+
 
         $sertifikat = new ModelsSertifikatBaptis;
         $sertifikat->nama_jemaat        = $request->nama_jemaat;
@@ -130,7 +145,18 @@ class SertifikatBaptis extends Controller
 
     public function edit(Request $request, $sertifikat_baptis_id)
     {
-        validator($request->all())->validate([
+        // Debugging: Log the request data and file sizes
+        \Log::info('SertifikatBaptis@edit request data:', $request->except(['foto_jemaat', 'foto_tanda_tangan', 'ttdsaksi1', 'ttdsaksi2']));
+        foreach (['foto_jemaat', 'foto_tanda_tangan', 'ttdsaksi1', 'ttdsaksi2'] as $field) {
+            if ($request->hasFile($field)) {
+                $file = $request->file($field);
+                \Log::info("File $field: size=" . $file->getSize() . " error=" . $file->getError() . " isValid=" . ($file->isValid() ? 'yes' : 'no'));
+            } else {
+                \Log::info("File $field missing or invalid");
+            }
+        }
+
+        $request->validate([
             'nama_jemaat'               => 'required',
             'tanggal_baptis'            => 'required|date',
             'tempat_baptis'             => 'required',
@@ -141,17 +167,18 @@ class SertifikatBaptis extends Controller
             'nama_pembaptis'            => 'required',
             'saksi1'                    => 'required',
             'saksi2'                    => 'required',
-            'foto_jemaat'               => 'nullable|image|mimes:jpeg,png,jpg',
+            'foto_jemaat'               => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
             'nama_pendeta'              => 'required',
             'nama_kota'                 => 'required',
-            'foto_tanda_tangan'         => 'required',
-            'ttdsaksi1'                 => 'required',
-            'ttdsaksi2'                 => 'required',
+            'foto_tanda_tangan'         => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'ttdsaksi1'                 => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'ttdsaksi2'                 => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
             'lfk_status_sertifikat_id'  => 'required',
-            'alasan_demote'             => '',
+            'alasan_demote'             => 'nullable',
             'lfk_cabang_id'             => 'required',
             'no_sertifikat'             => 'nullable',
         ]);
+
         $sertifikat = ModelsSertifikatBaptis::find($sertifikat_baptis_id);
         if (!$sertifikat) {
             return redirect()->back()->with('gagal', 'Data tidak ditemukan');

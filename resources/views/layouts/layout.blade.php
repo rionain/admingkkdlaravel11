@@ -152,6 +152,75 @@
             $('.dataTables_paginate').addClass('pull-right');
         })
     </script>
+
+    {{-- ============================================================ --}}
+    {{-- GLOBAL: Client-side file size & type validation              --}}
+    {{-- Fires immediately when user selects any file input anywhere  --}}
+    {{-- ============================================================ --}}
+    <script>
+    (function () {
+        var MAX_MB = 5;
+        var MAX_BYTES = MAX_MB * 1024 * 1024; // 5 242 880 bytes
+        var ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
+
+        function formatSize(bytes) {
+            if (bytes >= 1048576) return (bytes / 1048576).toFixed(2) + ' MB';
+            return (bytes / 1024).toFixed(0) + ' KB';
+        }
+
+        function validateFileInput(input) {
+            if (!input.files || input.files.length === 0) return;
+            var file = input.files[0];
+
+            // Type check (only for image inputs – skip report / document inputs)
+            var isImageInput = (input.accept || '').toLowerCase().indexOf('image') !== -1
+                            || input.name === 'foto' || input.name === 'foto_jemaat'
+                            || input.name === 'foto_tanda_tangan' || input.name === 'ttdsaksi1'
+                            || input.name === 'ttdsaksi2' || input.name === 'fileKop'
+                            || input.name === 'ttd';
+
+            if (isImageInput && ALLOWED_TYPES.indexOf(file.type) === -1) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Format File Tidak Valid',
+                    html: '<b>' + file.name + '</b><br>Hanya gambar <b>JPG / PNG</b> yang diizinkan.',
+                    confirmButtonColor: '#e74c3c'
+                });
+                input.value = '';
+                return;
+            }
+
+            // Size check
+            if (file.size > MAX_BYTES) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ukuran File Terlalu Besar',
+                    html:  '<b>' + file.name + '</b><br>'
+                         + 'Ukuran file: <b class="text-danger">' + formatSize(file.size) + '</b><br>'
+                         + 'Maksimum yang diizinkan: <b>' + MAX_MB + ' MB</b>',
+                    confirmButtonColor: '#e74c3c'
+                });
+                input.value = '';
+                return;
+            }
+
+            // OK – show small inline success feedback
+            var existingFeedback = $(input).siblings('.file-size-feedback');
+            if (existingFeedback.length) existingFeedback.remove();
+            $(input).after(
+                '<small class="file-size-feedback text-success">'
+                + '<i class="fa fa-check-circle"></i> '
+                + file.name + ' (' + formatSize(file.size) + ')'
+                + '</small>'
+            );
+        }
+
+        // Attach to all current + future file inputs (handles dynamically opened modals)
+        $(document).on('change', 'input[type="file"]', function () {
+            validateFileInput(this);
+        });
+    })();
+    </script>
 </body>
 
 </html>

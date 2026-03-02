@@ -37,7 +37,19 @@ class SertifikatPenyerahanAnak extends Controller
 
     public function tambah(Request $request)
     {
-        validator($request->all())->validate([
+        // Debugging: Log the request data and file sizes
+        $fileFields = ['foto', 'ttdsaksi1', 'ttdsaksi2'];
+        \Log::info('SertifikatPenyerahanAnak@tambah request data:', $request->except($fileFields));
+        foreach ($fileFields as $field) {
+            if ($request->hasFile($field)) {
+                $file = $request->file($field);
+                \Log::info("File $field: size=" . $file->getSize() . " error=" . $file->getError() . " isValid=" . ($file->isValid() ? 'yes' : 'no'));
+            } else {
+                \Log::info("File $field missing or invalid");
+            }
+        }
+
+        $request->validate([
             'nama_jemaat'               => 'required',
             'tanggal_penyerahan_anak'   => 'required|date',
             'jenis_kelamin'             => 'required',
@@ -48,12 +60,15 @@ class SertifikatPenyerahanAnak extends Controller
             'nama_pendeta'              => 'required',
             'saksi_pembimbing1'         => 'nullable',
             'saksi_pembimbing2'         => 'nullable',
-            'foto'                      => 'required|image|mimes:jpeg,png,jpg',
+            'foto'                      => 'required|image|mimes:jpeg,png,jpg|max:5120',
+            'ttdsaksi1'                 => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'ttdsaksi2'                 => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
             'lfk_status_sertifikat_id'  => 'required',
-            'alasan_demote'             => '',
+            'alasan_demote'             => 'nullable',
             'lfk_cabang_id'             => 'required',
             'no_sertifikat'             => 'required',
         ]);
+
 
         $sertifikat = new ModelsSertifikatPenyerahanAnak;
         $sertifikat->nama_jemaat                = $request->nama_jemaat;
@@ -113,7 +128,19 @@ class SertifikatPenyerahanAnak extends Controller
 
     public function edit(Request $request, $sertifikat_penyerahan_anak_id)
     {
-        validator($request->all())->validate([
+        // Debugging: Log the request data and file sizes
+        $fileFields = ['foto', 'ttdsaksi1', 'ttdsaksi2'];
+        \Log::info('SertifikatPenyerahanAnak@edit request data:', $request->except($fileFields));
+        foreach ($fileFields as $field) {
+            if ($request->hasFile($field)) {
+                $file = $request->file($field);
+                \Log::info("File $field: size=" . $file->getSize() . " error=" . $file->getError() . " isValid=" . ($file->isValid() ? 'yes' : 'no'));
+            } else {
+                \Log::info("File $field missing or invalid");
+            }
+        }
+
+        $request->validate([
             'nama_jemaat'               => 'required',
             'tanggal_penyerahan_anak'   => 'required|date',
             'jenis_kelamin'             => 'required',
@@ -124,12 +151,15 @@ class SertifikatPenyerahanAnak extends Controller
             'nama_pendeta'              => 'required',
             'saksi_pembimbing1'         => 'nullable',
             'saksi_pembimbing2'         => 'nullable',
-            'foto'                      => 'nullable|image|mimes:jpeg,png,jpg',
+            'foto'                      => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'ttdsaksi1'                 => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'ttdsaksi2'                 => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
             'lfk_status_sertifikat_id'  => 'required',
-            'alasan_demote'             => '',
+            'alasan_demote'             => 'nullable',
             'lfk_cabang_id'             => 'required',
             'no_sertifikat'             => 'required',
         ]);
+
         $sertifikat = ModelsSertifikatPenyerahanAnak::find($sertifikat_penyerahan_anak_id);
         if (!$sertifikat) {
             return redirect()->back()->with('gagal', 'Data tidak ditemukan');

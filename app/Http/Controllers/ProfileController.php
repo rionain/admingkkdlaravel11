@@ -51,11 +51,22 @@ class ProfileController extends Controller
 
     public function edit_profile()
     {
+        // Debugging: Log the request data and file sizes
+        \Log::info('ProfileController@edit_profile request data:', request()->except(['foto']));
+        if (request()->hasFile('foto')) {
+            $file = request()->file('foto');
+            \Log::info("File foto: size=" . $file->getSize() . " error=" . $file->getError() . " isValid=" . ($file->isValid() ? 'yes' : 'no'));
+        } else {
+            \Log::info("File foto missing or invalid");
+        }
+
         $value = (object) request()->validate([
             'nama' => 'required',
             'gender' => 'required',
             'alamat' => 'required',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
         ]);
+
         $auth = Auth::user();
         $user = User::where('user_id', $auth->user_id)->first();
         if (!$user) {
